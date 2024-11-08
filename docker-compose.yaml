@@ -1,0 +1,33 @@
+services:
+  uplift:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - type: bind
+        source: ./models
+        target: /models
+      - type: bind
+        source: ./logs
+        target: /logs
+      - type: bind
+        source: ./service
+        target: /service
+    networks: 
+      - fastapi_app
+
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - "80:80"
+      - "2003:2003"
+      - "8125:8125/udp"
+      - "8126:8126"
+    networks: 
+      - fastapi_app
+    
+
+networks:
+  fastapi_app:
+    driver: bridge
